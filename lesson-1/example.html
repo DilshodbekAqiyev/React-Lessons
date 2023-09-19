@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Example</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+        <script>
+            const { createElement: _ } = React;
+
+            const rootHtml = document.querySelector("#root");
+
+            // const li_1 = React.createElement("li", {}, "Olma");
+            // const li_2 = React.createElement("li", {}, "Olxo'ri");
+            // const li_3 = React.createElement("li", {}, "Olcha");
+            // const ul = React.createElement("ul", {}, li_1, li_2, li_3);
+
+            const lists = ["Olcha", "Olxo'ri", "Olma"].map((fruit, index) =>
+                _(
+                    "li",
+                    {
+                        key: index,
+                    },
+                    `${fruit}`
+                )
+            );
+            const ul = _("ol", {}, lists);
+
+            const row = _("div", { id: "row" }, ul);
+            const container = _("div", { id: "container" }, row);
+
+            const root = ReactDOM.createRoot(rootHtml);
+            root.render(container);
+        </script>
+    </body>
+</html>

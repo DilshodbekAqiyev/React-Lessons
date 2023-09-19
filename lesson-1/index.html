@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>React</title>
+        <style>
+            #container {
+                background: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root">
+            <h1>No data</h1>
+            <!-- birinchi h1 chiqib keyin  -->
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script>
+            // Javascript
+
+            // const root = document.querySelector("#root");
+            // const heading = document.createElement("h1");
+            // heading.textContent = "Hello world";
+
+            // root.appendChild(heading);
+
+            // React
+
+            // const rootElement = document.querySelector("#root");
+            // const heading = React.createElement("h1", {}, "Hello world"); // tag name,atributes,ChildNodes
+            // const root = ReactDOM.createRoot(rootElement); // virtual dom yaratish
+            // root.render(heading); //rootElement ga headingni chizish
+
+            // =======================
+
+            const heading1 = React.createElement("h1", {}, "Hello world");
+            const heading2 = React.createElement("h2", {}, "Salom Dunyo");
+            const container = React.createElement(
+                "div",
+                {
+                    id: "container",
+                    // john: "Doe",
+                    // hello: "world",
+                    // [heading1,heading2] // error chiqadi e'tibor bermaymiz
+                },
+                heading1,
+                heading2
+            );
+            const root = ReactDOM.createRoot(document.querySelector("#root"));
+            root.render(container);
+        </script>
+    </body>
+</html>
