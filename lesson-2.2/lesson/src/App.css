@@ -1,0 +1,35 @@
+#container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container {
+    display: flex;
+    gap: 30px;
+}
+.box {
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    width: 300px;
+    padding: 5px;
+}
+.box img {
+    width: 300px;
+    height: 300px;
+}
+.text-box {
+    padding: 16px;
+}
+.title {
+    margin: 5px 0;
+}
+.description {
+    text-align: center;
+}
