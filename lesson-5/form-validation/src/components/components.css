@@ -1,0 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.parent-box {
+    width: 100%;
+    padding: 30px;
+    border-radius: 20px;
+    background: #e0e0e0;
+    border: 3px solid #ccc;
+}

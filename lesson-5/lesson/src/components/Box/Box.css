@@ -1,0 +1,24 @@
+.box {
+    background: green;
+    color: white;
+    margin-bottom: 30px;
+}
+
+.box-small {
+    width: 200px;
+    height: 150px;
+    background: red;
+    color: white;
+}
+.box-medium {
+    width: 300px;
+    height: 150px;
+    background-color: brown;
+    color: white;
+}
+.box-large {
+    width: 400px;
+    height: 150px;
+    background-color: darkorange;
+    color: white;
+}
