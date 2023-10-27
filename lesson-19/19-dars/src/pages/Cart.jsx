@@ -1,4 +1,3 @@
-// Cart.jsx
 import { useEffect, useState } from 'react';
 import CartCard from '@/components/cart-card.jsx';
 import { instance } from '@/utils/use-request';
