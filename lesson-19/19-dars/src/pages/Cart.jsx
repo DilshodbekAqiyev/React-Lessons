@@ -33,6 +33,7 @@ function Cart() {
 
   const updateQuantityOnBackend = async (productId, newQuantity) => {
     try {
+      console.log(newQuantity);
       const response = await instance.patch(`/cart/${productId}`, { quantity: newQuantity });
       console.log(response);
     } catch (error) {

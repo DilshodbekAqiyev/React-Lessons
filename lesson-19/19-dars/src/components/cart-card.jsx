@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { badgeVariants } from '@/components/ui/badge';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function CartCard({
   bookName,
@@ -15,18 +15,17 @@ function CartCard({
   discountPercent,
   _id,
   genre,
-  onUpdateQuantity, // Function to update quantity on the backend
+  onUpdateQuantity,
   onRemoveFromCart,
-  quantity, // Quantity from the backend
+  quantity,
 }) {
-  const [number, setNumber] = useState(quantity); // Use the quantity from the backend
+  const [number, setNumber] = useState(quantity);
 
   const InputRef = useRef();
 
   const handleQuantityChange = async (newQuantity) => {
     setNumber(newQuantity);
 
-    // Call the provided callback function to update the quantity on the backend
     onUpdateQuantity(_id, newQuantity);
   };
 
