@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Loader from 'react-js-loader';
 import { useParams } from 'react-router-dom';
 import { badgeVariants } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 
-function SingleProduct({ products, wishlist, setWishlist }) {
+function SingleProduct({ products, handleAddToCart, handleRemoveFromCart, handleLikeBtnClick, wishlist, cart }) {
   const [singleData, setSingleData] = useState({});
   const { productID } = useParams();
   const { toast } = useToast();
@@ -24,21 +23,8 @@ function SingleProduct({ products, wishlist, setWishlist }) {
     }
   }, [productID, products, toast]);
 
-  const handleAddToWishlist = () => {
-    if (!wishlist.includes(productID)) {
-      setWishlist([...wishlist, productID]);
-      toast({
-        title: 'Succesfully added to Wishlist',
-      });
-    } else {
-      toast({
-        variant: 'destructive',
-        title: 'Already added to Wishlist',
-      });
-    }
-  };
-
   const {
+    _id,
     author,
     badgeText,
     bookName,
@@ -51,6 +37,9 @@ function SingleProduct({ products, wishlist, setWishlist }) {
     rating,
   } = singleData;
 
+  const isWishlisted = wishlist.some((item) => item._id === _id);
+  const isCarted = cart.some((item) => item._id === _id);
+
   return (
     <>
       {products.length ? (
@@ -61,7 +50,7 @@ function SingleProduct({ products, wishlist, setWishlist }) {
               {badgeText}
             </span>
           </div>
-          <div className='w-[50%] border'>
+          <div className='w-[50%]'>
             <h2 className='font-bold text-[36px]'>{bookName}</h2>
             <hr className='border' />
             <h3 className='text-[22px]'>
@@ -83,21 +72,50 @@ function SingleProduct({ products, wishlist, setWishlist }) {
               <span className='text-red-500 text-[14px]'>({discountPercent}% off)</span>
             </div>
             <div className='flex justify-between items-center gap-3 mt-5 w-[420px]'>
-              <Button
-                className='bg-red-500 w-1/2'
-                onClick={() => {
-                  handleAddToWishlist();
-                }}
-              >
-                Add to Wishlist
-              </Button>
-              <Button className='bg-orange-400 w-1/2'>Add to Card</Button>
+              {isWishlisted ? (
+                <Button
+                  className='bg-red-500 w-1/2'
+                  onClick={() => {
+                    handleLikeBtnClick(_id);
+                  }}
+                >
+                  Remove from Wishlist
+                </Button>
+              ) : (
+                <Button
+                  className='bg-red-500 w-1/2'
+                  onClick={() => {
+                    handleLikeBtnClick(_id);
+                  }}
+                >
+                  Add to Wishlist
+                </Button>
+              )}
+              {isCarted ? (
+                <Button
+                  className='bg-orange-400 w-1/2'
+                  onClick={() => {
+                    handleRemoveFromCart(_id);
+                  }}
+                >
+                  Remove from Cart
+                </Button>
+              ) : (
+                <Button
+                  className='bg-orange-400 w-1/2'
+                  onClick={() => {
+                    handleAddToCart(_id);
+                  }}
+                >
+                  Add to Cart
+                </Button>
+              )}
             </div>
           </div>
         </section>
       ) : (
         <div className='h-[500px] flex justify-center items-center'>
-          <Loader type='bubble-loop' bgColor={'#ccc'} color={'#ccc'} size={125} />
+          <h2 className='text-gray-500'>Loading...</h2>
         </div>
       )}
     </>
@@ -107,7 +125,10 @@ function SingleProduct({ products, wishlist, setWishlist }) {
 SingleProduct.propTypes = {
   products: PropTypes.array,
   wishlist: PropTypes.array,
-  setWishlist: PropTypes.func,
+  cart: PropTypes.array,
+  handleAddToCart: PropTypes.func,
+  handleRemoveFromCart: PropTypes.func,
+  handleLikeBtnClick: PropTypes.func,
 };
 
 export default SingleProduct;

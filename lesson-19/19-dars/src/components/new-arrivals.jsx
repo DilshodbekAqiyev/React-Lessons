@@ -1,11 +1,14 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { instance } from '@/utils/use-request';
-import { useEffect, useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 import Card from './card';
-import Loader from 'react-js-loader';
+import { Link } from 'react-router-dom';
 
-function NewArrivals({ wishlist, setWishlist }) {
+function NewArrivals({ wishList, setWishList, isLogged }) {
   const [arrivals, setArrivals] = useState();
+  const { toast } = useToast();
+
   useEffect(() => {
     // eslint-disable-next-line no-extra-semi
     (async () => {
@@ -14,26 +17,43 @@ function NewArrivals({ wishlist, setWishlist }) {
     })();
   }, []);
 
+  const handleLikeBtnClick = (id) => {
+    if (!isLogged) {
+      toast({
+        variant: 'destructive',
+        title: 'You are not registered.',
+        description: 'Please register and try again!',
+        action: <Link to={'/login'}>Login</Link>,
+      });
+      return;
+    } else {
+      const el = wishList.find((wishItem) => wishItem._id === id);
+
+      if (!el) {
+        setWishList((prev) => [...prev, arrivals.find((arr) => arr._id === id)]);
+      } else {
+        setWishList((prev) => prev.filter((wishItem) => wishItem._id !== id));
+      }
+    }
+  };
+
   return (
-    <>
-      <div className='flex justify-between'>
-        {arrivals?.length ? (
-          arrivals?.map((arrival) => (
-            <Card key={arrival._id} {...arrival} wishlist={wishlist} setWishlist={setWishlist} />
-          ))
-        ) : (
-          <div className='w-full flex justify-center items-center h-[370px]'>
-            <Loader type='bubble-loop' bgColor={'#ccc'} color={'#ccc'} size={125} />
-          </div>
-        )}
-      </div>
-    </>
+    <div className='flex justify-between'>
+      {arrivals?.map((arrival) => (
+        <Card
+          key={arrival._id}
+          {...arrival}
+          isLiked={wishList.findIndex((wishItem) => wishItem._id === arrival?._id) === -1}
+          handleLikeBtnClick={handleLikeBtnClick}
+        />
+      ))}
+    </div>
   );
 }
+export default NewArrivals;
 
 NewArrivals.propTypes = {
-  wishlist: PropTypes.array,
-  setWishlist: PropTypes.func,
+  wishList: PropTypes.array,
+  setWishList: PropTypes.func,
+  isLogged: PropTypes.any,
 };
-
-export default NewArrivals;

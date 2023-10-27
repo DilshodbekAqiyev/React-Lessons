@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import { badgeVariants } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { Button } from './ui/button';
 
 function Card({
   bookName,
@@ -15,25 +13,21 @@ function Card({
   discountPercent,
   _id,
   genre,
-  wishlist,
-  setWishlist,
+  isLiked,
+  rating,
+  handleLikeBtnClick,
 }) {
   const navigate = useNavigate();
 
-  const [isLiked, setIsLiked] = useState(wishlist?.includes(_id));
-
-  const handleLikeClick = () => {
-    setIsLiked(!isLiked);
-
-    if (isLiked) {
-      setWishlist(wishlist?.filter((productId) => productId !== _id));
-    } else {
-      setWishlist([...wishlist, _id]);
-    }
+  const handleClick = (e) => {
+    e.stopPropagation();
+    handleLikeBtnClick(_id);
   };
-
   return (
-    <div className='w-[250px]  border border-gray-500 cursor-pointer p-1 text-center relative hover:shadow-2xl transition-all'>
+    <div
+      className='w-[250px]  border border-gray-500 cursor-pointer p-1 text-center relative'
+      onClick={() => navigate('/product/' + _id)}
+    >
       <span
         className={`${badgeVariants({
           variant: 'destructive',
@@ -41,29 +35,27 @@ function Card({
       >
         {badgeText}
       </span>
-      <span className='absolute top-2 right-2 p-2' onClick={handleLikeClick}>
-        {isLiked ? '❤️' : '🤍'}
+      <span
+        onClick={handleClick}
+        className={`${badgeVariants({
+          variant: 'destructive',
+        })} absolute top-1 right-1 rounded-full py-2 bg-transparent`}
+      >
+        {!isLiked ? '❤️' : '🤍'}
       </span>
       <img src={imgSrc} alt={imgAlt} className='w-[150px] mx-auto mt-2 h-[200px] object-contain' />
-      <h3 className='font-bold mt-2'>{bookName}</h3>
-      <span className='my-4 inline-block'>
-        by <span className='font-semibold'>{author}</span>
-      </span>
-      <div className='flex justify-around items-center'>
+      <h3>{bookName}</h3>
+      <span className='my-4 inline-block'>by {author}</span>
+      <div className='flex justify-between items-center'>
         <p>R.S {discountedPrice}</p>
         <del>R.S {originalPrice}</del>
         <span className='text-red-500 text-[12px]'>({discountPercent}%)</span>
       </div>
-      <div className='flex justify-around items-center'>
-        <span>{genre.charAt(0).toUpperCase() + genre.slice(1)}</span>
-        <Button variant='link' onClick={() => navigate('/product/' + _id)} className='font-semibold'>
-          more...
-        </Button>
-      </div>
+      <p>Rating: {rating}</p>
+      <span>{genre}</span>
     </div>
   );
 }
-
 export default Card;
 
 Card.propTypes = {
@@ -76,7 +68,8 @@ Card.propTypes = {
   badgeText: PropTypes.string,
   discountPercent: PropTypes.number,
   _id: PropTypes.string,
+  rating: PropTypes.number,
   genre: PropTypes.string,
-  wishlist: PropTypes.array,
-  setWishlist: PropTypes.func,
+  isLiked: PropTypes.any,
+  handleLikeBtnClick: PropTypes.func,
 };
