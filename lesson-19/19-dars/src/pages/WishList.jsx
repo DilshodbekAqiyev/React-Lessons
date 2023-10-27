@@ -17,7 +17,7 @@ function WishList() {
     getData();
   }, []);
   return (
-    <div className='flex  mt-5 flex-wrap gap-10'>
+    <div className='flex  mt-5 flex-wrap gap-5'>
       {data?.length ? (
         data.map((wishItem) => <Card key={wishItem._id} {...wishItem} handleLikeBtnClick={click} />)
       ) : (
