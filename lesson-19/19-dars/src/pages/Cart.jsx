@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 function Cart() {
   const [cart, setCart] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [discount, setDiscount] = useState(0);
 
   const getData = async () => {
     const data = await instance.get('/user');
@@ -20,6 +21,9 @@ function Cart() {
   useEffect(() => {
     const total = cart.reduce((acc, item) => acc + item.discountedPrice * item.quantity, 0);
     setTotalAmount(total);
+
+    const totalDiscount = cart?.reduce((acc, curr) => acc + curr.originalPrice - curr.discountedPrice, 0);
+    setDiscount(totalDiscount);
   }, [cart]);
 
   const handleRemoveFromCart = async (id) => {
@@ -62,7 +66,7 @@ function Cart() {
               </div>
             ))}
             <hr />
-            <p className='text-[25px]'>Discount: ₹ {totalAmount}</p>
+            <p className='text-[25px]'>Discount: ₹ {discount}</p>
             <p className='text-[25px]'>Delivery Charges: ₹ 50</p>
             <hr />
             <p className='text-[25px] font-semibold'>Total Charges: ₹ {totalAmount + 50}</p>
