@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { badgeVariants } from '@/components/ui/badge';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 function CartCard({
   bookName,

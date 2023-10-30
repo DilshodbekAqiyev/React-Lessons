@@ -6,7 +6,7 @@ import Header from './components/header.jsx';
 import Layout from './components/layout.jsx';
 import SingleProduct from './pages/single-product.jsx';
 import Shop from './pages/shop.jsx';
-import WishList from './pages/wishlist.jsx';
+import WishList from './pages/wishlist';
 import { instance } from './utils/use-request.js';
 import Login from './pages/login.jsx';
 import Cart from './pages/Cart.jsx';
