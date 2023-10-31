@@ -55,6 +55,12 @@ function App() {
     dispatch({ type: 'SET_INPUT_VALUE', payload: e.target.value });
   };
 
+  const handleEnterPress = (e) => {
+    if (e.key == 'Enter') {
+      handleConvert();
+    }
+  };
+
   const handleConvert = () => {
     const fromCurrency = state.fromCurrency;
     const toCurrency = state.toCurrency;
@@ -91,54 +97,63 @@ function App() {
     <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
       <h1 className='text-4xl text-center mb-5'>Currency Converter</h1>
       <div className='flex flex-col gap-5'>
-        <div>
-          <label htmlFor='from' className='mb-2 text-sm font-medium text-gray-900'>
-            From :&nbsp;&nbsp;
-          </label>
-          <select
-            id='from'
-            onChange={handleFromCurrencyChange}
-            value={state.fromCurrency}
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-[300px] p-2.5 '
-          >
-            {Object.entries(state.currencies)?.map(([currency, name]) => (
-              <option key={currency} value={currency}>
-                {name}
-              </option>
-            ))}
-          </select>
+        <div className='flex justify-between gap-5'>
+          <div className='w-1/2'>
+            <label htmlFor='from' className='mb-2 text-sm font-medium text-gray-900'>
+              From:
+            </label>
+            <select
+              id='from'
+              onChange={handleFromCurrencyChange}
+              value={state.fromCurrency}
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5'
+            >
+              {Object.entries(state.currencies)?.map(([currency, name]) => (
+                <option key={currency} value={currency}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className='w-1/2'>
+            <label htmlFor='to' className='mb-2 text-sm font-medium text-gray-900'>
+              To:
+            </label>
+            <select
+              id='to'
+              onChange={handleToCurrencyChange}
+              value={state.toCurrency}
+              className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5'
+            >
+              {Object.entries(state.currencies)?.map(([currency, name]) => (
+                <option key={currency} value={currency}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div>
-          <label htmlFor='input'>Input : </label>
+          <label htmlFor='input' className='mb-2 text-sm font-medium text-gray-900'>
+            Input:
+          </label>
           <input
             type='number'
             id='input'
             value={state.inputValue}
             onChange={handleInputChange}
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-[300px] p-2.5 '
+            onKeyDown={handleEnterPress}
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5'
           />
         </div>
-
-        <div>
-          <label htmlFor='to' className='mb-2 text-sm font-medium text-gray-900'>
-            To : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </label>
-          <select
-            id='to'
-            onChange={handleToCurrencyChange}
-            value={state.toCurrency}
-            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-[300px] p-2.5 '
+        <div className='text-center'>
+          <button
+            onClick={handleConvert}
+            className='bg-blue-500 text-white rounded-lg py-2 w-3/4 mx-auto hover:bg-blue-600 focus:outline-none'
           >
-            {Object.entries(state.currencies)?.map(([currency, name]) => (
-              <option key={currency} value={currency}>
-                {name}
-              </option>
-            ))}
-          </select>
+            Convert
+          </button>
         </div>
-        <button onClick={handleConvert} className='bg-gray-200 rounded-lg py-2 w-[80%] mx-auto'>
-          Convert
-        </button>
       </div>
       <div className='mt-5 text-center text-xl'>{state.conversionResult && <h4>{state.conversionResult}</h4>}</div>
     </div>
