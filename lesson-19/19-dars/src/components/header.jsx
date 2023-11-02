@@ -30,9 +30,14 @@ function Header({ isLogged, setIsLogged }) {
             <Button onClick={onLogout}>Logout</Button>
           </>
         ) : (
-          <Link to={'/login'} className='p-2 bg-slate-500 text-white'>
-            Login
-          </Link>
+          <>
+            <Link to={'/shop'} className='rounded-full bg-blue-400 p-2'>
+              Shop
+            </Link>
+            <Link to={'/login'} className='p-2 bg-slate-500 text-white'>
+              Login
+            </Link>
+          </>
         )}
       </div>
     </header>
