@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { badgeVariants } from '@/components/ui/badge';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function CartCard({
   bookName,
@@ -23,7 +23,16 @@ function CartCard({
 
   const InputRef = useRef();
 
+  useEffect(() => {
+    setNumber(quantity);
+  }, [quantity]);
+
   const handleQuantityChange = async (newQuantity) => {
+    // Prevent the quantity from going below 1
+    if (newQuantity < 1) {
+      newQuantity = 1;
+    }
+
     setNumber(newQuantity);
 
     onUpdateQuantity(_id, newQuantity);
@@ -31,7 +40,12 @@ function CartCard({
 
   const inputValueChange = () => {
     const inputValue = InputRef.current.value;
-    const newQuantity = parseInt(inputValue, 10);
+    let newQuantity = parseInt(inputValue, 10);
+
+    if (newQuantity < 1) {
+      newQuantity = 1;
+    }
+
     handleQuantityChange(newQuantity);
   };
 
@@ -59,7 +73,13 @@ function CartCard({
         <h4 className='my-3'>Genre: {genre}</h4>
         <div className='text-2xl flex items-center'>
           Quantity:
-          <Button variant='outline' className='p-5 rounded-full' onClick={() => handleQuantityChange(number - 1)}>
+          <Button
+            variant='outline'
+            className='p-5 rounded-full'
+            onClick={() => {
+              handleQuantityChange(number - 1);
+            }}
+          >
             -
           </Button>
           <Input type='number' ref={InputRef} value={number} onChange={inputValueChange} className='w-[80px]' />

@@ -8,10 +8,14 @@ function Cart() {
   const [cart, setCart] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [newCart, setNewCart] = useState([]);
+  const deliveryCharges = 50;
 
   const getData = async () => {
     const data = await instance.get('/user');
     setCart(data.data?.user?.cart);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setNewCart([...data.data?.user?.cart]);
   };
 
   useEffect(() => {
@@ -19,22 +23,27 @@ function Cart() {
   }, []);
 
   useEffect(() => {
-    const total = cart.reduce((acc, item) => acc + item.discountedPrice * item.quantity, 0);
+    const total = newCart.reduce((acc, item) => acc + item.discountedPrice * item.quantity, 0);
     setTotalAmount(total);
 
-    const totalDiscount = cart?.reduce((acc, curr) => acc + curr.originalPrice - curr.discountedPrice, 0);
+    const totalDiscount = newCart.reduce(
+      (acc, curr) => acc + (curr.originalPrice - curr.discountedPrice) * curr.quantity,
+      0
+    );
     setDiscount(totalDiscount);
-  }, [cart]);
+  }, [newCart]);
 
   const handleRemoveFromCart = async (id) => {
     await instance.delete(`/cart/${id}`);
     setCart((prevCart) => prevCart.filter((item) => item._id !== id));
+    setNewCart((prevNewCart) => prevNewCart.filter((item) => item._id !== id));
   };
 
   const updateQuantityOnBackend = async (productId, newQuantity) => {
     try {
-      console.log(newQuantity);
       const response = await instance.patch(`/cart/${productId}`, { quantity: newQuantity });
+      const updatedCart = newCart.map((item) => (item._id === productId ? { ...item, quantity: newQuantity } : item));
+      setNewCart(updatedCart);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -46,7 +55,7 @@ function Cart() {
       {cart.length ? (
         <div className='flex justify-between mt-5'>
           <div className='w-[600px] gap-5 flex flex-col'>
-            {cart.map((item) => (
+            {newCart?.map((item) => (
               <CartCard
                 key={item._id}
                 onUpdateQuantity={updateQuantityOnBackend}
@@ -59,7 +68,7 @@ function Cart() {
           <div className='w-[600px] mt-5 flex flex-col gap-8 p-3'>
             <h1 className='text-[35px] text-center'>Bill Details</h1>
             <hr />
-            {cart.map((cartItem) => (
+            {newCart?.map((cartItem) => (
               <div className='text-xl text-end' key={cartItem._id}>
                 {cartItem.bookName} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; X{' '}
                 {cartItem.quantity} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;₹&nbsp;
@@ -68,9 +77,9 @@ function Cart() {
             ))}
             <hr />
             <p className='text-[25px]'>Discount: ₹ {discount}</p>
-            <p className='text-[25px]'>Delivery Charges: ₹ 50</p>
+            <p className='text-[25px]'>Delivery Charges: ₹ {deliveryCharges}</p>
             <hr />
-            <p className='text-[25px] font-semibold'>Total Charges: ₹ {totalAmount + 50}</p>
+            <p className='text-[25px] font-semibold'>Total Charges: ₹ {totalAmount + deliveryCharges}</p>
             <hr />
             <p className='text-[25px]'>
               Apply Coupon: Try <Input type='text' placeholder={'BOOKS200'} />
