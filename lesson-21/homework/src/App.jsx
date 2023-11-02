@@ -1,4 +1,5 @@
 import { useReducer, useEffect } from 'react';
+import { ACTION_TYPES } from './constants/ActionTypes';
 
 const API_BASE_URL = 'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1';
 const API_VERSION = 'latest';
@@ -13,15 +14,15 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'SELECT_FROM_CURRENCY':
+    case ACTION_TYPES.SELECT_FROM_CURRENCY:
       return { ...state, fromCurrency: action.payload };
-    case 'SELECT_TO_CURRENCY':
+    case ACTION_TYPES.SELECT_TO_CURRENCY:
       return { ...state, toCurrency: action.payload };
-    case 'SET_INPUT_VALUE':
+    case ACTION_TYPES.SET_INPUT_VALUE:
       return { ...state, inputValue: action.payload };
-    case 'SET_CURRENCIES':
+    case ACTION_TYPES.SET_CURRENCIES:
       return { ...state, currencies: action.payload };
-    case 'SET_CONVERSION_RESULT':
+    case ACTION_TYPES.SET_CONVERSION_RESULT:
       return { ...state, conversionResult: action.payload };
     default:
       return state;
@@ -36,7 +37,7 @@ function App() {
     fetch(`${API_BASE_URL}/${API_VERSION}/${endpoint}`)
       .then((response) => response.json())
       .then((data) => {
-        dispatch({ type: 'SET_CURRENCIES', payload: data });
+        dispatch({ type: ACTION_TYPES.SET_CURRENCIES, payload: data });
       })
       .catch((error) => {
         console.error('Error fetching currency data:', error);
@@ -44,15 +45,15 @@ function App() {
   }, []);
 
   const handleFromCurrencyChange = (e) => {
-    dispatch({ type: 'SELECT_FROM_CURRENCY', payload: e.target.value });
+    dispatch({ type: ACTION_TYPES.SELECT_FROM_CURRENCY, payload: e.target.value });
   };
 
   const handleToCurrencyChange = (e) => {
-    dispatch({ type: 'SELECT_TO_CURRENCY', payload: e.target.value });
+    dispatch({ type: ACTION_TYPES.SELECT_TO_CURRENCY, payload: e.target.value });
   };
 
   const handleInputChange = (e) => {
-    dispatch({ type: 'SET_INPUT_VALUE', payload: e.target.value });
+    dispatch({ type: ACTION_TYPES.SET_INPUT_VALUE, payload: e.target.value });
   };
 
   const handleEnterPress = (e) => {
@@ -80,10 +81,10 @@ function App() {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })} ${toCurrency.toUpperCase()}`;
-          dispatch({ type: 'SET_CONVERSION_RESULT', payload: result });
+          dispatch({ type: ACTION_TYPES.SET_CONVERSION_RESULT, payload: result });
         } else {
           dispatch({
-            type: 'SET_CONVERSION_RESULT',
+            type: ACTION_TYPES.SET_CONVERSION_RESULT,
             payload: 'Invalid conversion rate. Please check the currency codes.',
           });
         }
